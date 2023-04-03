@@ -236,6 +236,7 @@ jobs:
         run: pytest tests/calculator_api_test.py
 ```
 7.4: Dodano akcję uploadującą Dockerfile, uruchamianą w momencie mergowania:
+### Nie udało mi się uruchomić w ten sposób (zagnieżdzone uruchamianie):
 ```yaml
 on:
   pull_request:
@@ -253,11 +254,9 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Functional Tests
-      if: github.event_name == 'pull_request'
       uses: ./api_tests.yaml
 
     - name: Login to Docker Hub and push
-      if: github.event_name == 'push'
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
@@ -267,10 +266,57 @@ jobs:
         docker tag calculator-app ${{ secrets.DOCKER_USERNAME }}/calculator-app:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/calculator-app:latest
 ```
+### Więc copy-paste'owałem yaml testów:
+```yaml
+on:
+  pull_request:
+    branches:
+      - test
+    types:
+      - closed
+
+jobs:
+  push-docker-image:
+    if: github.event.pull_request.merged
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install dependencies for tests
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r tests/requirements.txt
+
+    - name: Build Docker image
+      run: docker build -t calculator-app .
+
+    - name: Run Docker image
+      run: docker run -d -p 8000:8000 calculator-app
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+    - name: Run tests
+      run: pytest tests/calculator_api_test.py
+
+    - name: Login to Docker Hub and push
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+      run: |
+        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        docker build -t calculator-app .
+        docker tag calculator-app ${{ secrets.DOCKER_USERNAME }}/calculator-app:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/calculator-app:latest
+
+```
 7.6.fail W celu zweryfikowania działania dodano zmiany psujące kod na gałęzi dev_feature_1 i spróbowano zmergować do dev: ![](sprawozdanie_imgs/dev_feature_1%20to%20dev%20fail.jpg)
 7.6.success Naprawiono blokujący błąd oraz zmergowano: ![](sprawozdanie_imgs/dev_feature_1%20to%20dev%20success.jpg)
 ![](sprawozdanie_imgs/dev_feature_1%20to%20dev%20merge.jpg)
 7.7.fail Spróbowano zmergować dev do test: ![](sprawozdanie_imgs/dev_to_test_fail.jpg)
 7.7.reason Powód: ![](sprawozdanie_imgs/dev_to_test_fail_reason.jpg)
 7.7.success Naprawiono blokujący błąd: ![](sprawozdanie_imgs/dev_to_test_success.jpg)
-7.7. Po zmergowaniu uploadowany jest obraz do repozytorium dockera: 
+7.7.docker Po zmergowaniu uploadowany jest obraz do repozytorium dockera: ![](sprawozdanie_imgs/docker_action.jpg) ![](sprawozdanie_imgs/docker hub.jpg)
