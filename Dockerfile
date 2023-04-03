@@ -13,5 +13,5 @@ RUN git clone https://github.com/Nielotz/DevOpsCollege.git app
 RUN python3.11 -m pip install -r app/api/requirements.txt
 
 CMD cd app && \
-    git switch test && \
+    git switch dev && \
     python3.11 main.py
