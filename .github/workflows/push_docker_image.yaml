@@ -15,6 +15,7 @@ jobs:
 
     - name: Functional Tests
       uses: ./.github/workflows/api_tests.yaml
+
     - name: Login to Docker Hub and push
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
