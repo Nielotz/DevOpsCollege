@@ -14,11 +14,8 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Functional Tests
-      if: github.event_name == 'pull_request'
-      uses: ./api_tests.yaml
-
+s      uses: ./.github/workflows/api_tests.yaml
     - name: Login to Docker Hub and push
-      if: github.event_name == 'push'
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
