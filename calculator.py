@@ -8,7 +8,7 @@ def mul(a: float, b: float):
 
 def div(a: float, b: float):
     if b == 0:
-        raise ArithmeticError
+        raise ZeroDivisionError
     return a / b
 
 def avg(a: list):
