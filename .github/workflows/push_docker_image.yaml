@@ -1,14 +1,13 @@
 on:
-  push:
+  pull_request:
     branches:
       - test
+    types:
+      - closed
 
 jobs:
   push-docker-image:
-    if: github.event_name == 'pull_request' &&
-      github.event.action == 'closed' &&
-      github.event.pull_request.merged &&
-      github.event.pull_request.base.ref == 'dev'
+    if: github.event.pull_request.merged
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
