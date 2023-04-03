@@ -10,11 +10,11 @@ jobs:
     if: github.event.pull_request.merged
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+#    - name: Checkout
+    - uses: actions/checkout@v3
 
-    - name: Functional Tests
-      uses: ./.github/actions/api_tests
+#    - name: Functional Tests
+    - uses: ./.github/actions/api_tests.yaml
 
     - name: Login to Docker Hub and push
       env:
