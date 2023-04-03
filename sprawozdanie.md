@@ -168,7 +168,7 @@ jobs:
 ```
 6.6: Weryfikacja działania: ![](sprawozdanie_imgs/6.6.jpg)
 
-## Lab 7
+## [Lab 7](https://github.com/Nielotz/DevOpsCollege/tree/Lab7)
 7.1: Stworzono 3 gałęzie: ![](sprawozdanie_imgs/7.1.jpg)
 7.2: Dodano akcję uruchamiającą unit testy w momencie pull requesta na dev: 
 ```yaml
