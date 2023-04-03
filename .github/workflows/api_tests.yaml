@@ -1,9 +1,9 @@
 name: Calculator api tests
 
 on:
-  push:
+  pull_request:
     branches:
-      - main
+      - test
 
 jobs:
   test-calculator-api:

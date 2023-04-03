@@ -1,0 +1,30 @@
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  push-docker-image:
+    if: github.event_name == 'pull_request' &&
+      github.event.action == 'closed' &&
+      github.event.pull_request.merged &&
+      github.event.pull_request.base.ref == 'test'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Functional Tests
+      if: github.event_name == 'pull_request'
+      uses: ./api_tests.yaml
+
+    - name: Login to Docker Hub and push
+      if: github.event_name == 'push'
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+      run: |
+        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        docker build -t calculator-app .
+        docker tag calculator-app ${{ secrets.DOCKER_USERNAME }}/calculator-app:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/calculator-app:latest
