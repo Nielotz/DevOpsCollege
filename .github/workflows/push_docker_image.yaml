@@ -6,24 +6,32 @@ on:
       - closed
 
 jobs:
-  checkout:
+  push-docker-image:
     if: github.event.pull_request.merged
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v3
 
-  run-tests:
-    if: github.event.pull_request.merged
-    runs-on: ubuntu-latest
-    steps:
-    - name: Functional Tests
-      uses: ./.github/workflows/api_tests.yaml
+    - name: Install dependencies for tests
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r tests/requirements.txt
 
-  push-dockerfile:
-    if: github.event.pull_request.merged
-    runs-on: ubuntu-latest
-    steps:
+    - name: Build Docker image
+      run: docker build -t calculator-app .
+
+    - name: Run Docker image
+      run: docker run -d -p 8000:8000 calculator-app
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+    - name: Run tests
+      run: pytest tests/calculator_api_test.py
+
     - name: Login to Docker Hub and push
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
