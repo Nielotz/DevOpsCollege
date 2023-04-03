@@ -14,7 +14,7 @@ async def api_sub(a: float, b: float):
 
 @app.get("/api/div")
 async def api_div(a: float, b: float):
-    if b == 0:
-        raise HTTPException(status_code=400, detail="Cannot divide by zero")
+    # if b == 0:
+    #     raise HTTPException(status_code=400, detail="Cannot divide by zero")
     return {"result": div(a, b)}
 
