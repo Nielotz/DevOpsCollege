@@ -13,3 +13,4 @@ def div(a: float, b: float):
 
 def avg(a: list):
     return numpy.average(a)
+ 
