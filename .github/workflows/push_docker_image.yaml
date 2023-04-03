@@ -12,7 +12,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-      ref: 'test'
+      with:
+        ref: 'test'
 
     - name: Functional Tests
       if: github.event_name == 'pull_request'

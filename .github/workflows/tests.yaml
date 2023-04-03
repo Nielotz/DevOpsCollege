@@ -12,7 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        ref: 'dev'
+        with:
+          ref: 'dev'
 
       - name: Setup Python
         uses: actions/setup-python@v2
