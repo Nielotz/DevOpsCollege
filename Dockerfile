@@ -14,4 +14,4 @@ RUN python3.11 -m pip install -r app/api/requirements.txt
 
 CMD cd app && \
     git switch test && \
-    python3.11 app/main.py
+    python3.11 main.py
